@@ -83,6 +83,4 @@ A abordagem **diagrams as code** permite manter os diagramas versionados junto a
 
 Quanto mais explícitos estiverem os limites, responsabilidades, regras de negócio e decisões arquiteturais, menor será a necessidade de o agente inventar decisões durante a implementação.
 
-## Repositório
 
-Link público: **[INSERIR LINK DO REPOSITÓRIO GITHUB]**
