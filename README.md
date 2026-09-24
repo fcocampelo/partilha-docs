@@ -136,4 +136,3 @@ Quanto mais explícitos estiverem os limites, responsabilidades, regras de negó
 
 ## Repositório
 
-Link público: **[INSERIR LINK DO REPOSITÓRIO GITHUB]**
