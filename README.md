@@ -37,17 +37,68 @@ Algumas regras de negócio são especialmente importantes:
 
 O sistema utiliza uma arquitetura de aplicação web, separando a interface utilizada pelos usuários, as regras de negócio executadas no backend e a persistência em banco de dados relacional.
 
-O diagrama estrutural está documentado em:
+O diagrama estrutural completo também está disponível em [`docs/architecture/containers.md`](docs/architecture/containers.md).
 
-- `docs/architecture/containers.md`
+```mermaid
+flowchart LR
+    U["Usuário da Paróquia"]
+
+    subgraph PARTILHA["Sistema Partilha"]
+        WEB["Aplicação Web<br/>Interface com o usuário"]
+        API["Backend / API<br/>Regras de negócio"]
+        DB[("Banco de Dados Relacional")]
+    end
+
+    U -->|HTTPS| WEB
+    WEB -->|Requisições| API
+    API -->|Leitura e gravação| DB
+```
 
 ## Jornada crítica
 
 Para representar o comportamento do sistema foi selecionada a jornada de **Prestação de Contas de Convites**, pois envolve validações de saldo, registro financeiro e regras relacionadas ao caixa.
 
-O diagrama de sequência está documentado em:
+O diagrama de sequência completo também está disponível em [`docs/flows/prestacao-contas.md`](docs/flows/prestacao-contas.md).
 
-- `docs/flows/prestacao-contas.md`
+```mermaid
+sequenceDiagram
+    actor U as Usuário
+    participant W as Aplicação Web
+    participant A as Backend/API
+    participant D as Banco de Dados
+
+    U->>W: Acessa Prestação de Contas
+    W->>A: Solicita dados do vendedor
+    A->>D: Consulta convites e acertos realizados
+    D-->>A: Retorna dados
+    A-->>W: Retorna máximo disponível
+
+    U->>W: Informa quantidade e pagamento
+    W->>A: Envia prestação de contas
+
+    A->>D: Consulta saldo de convites
+    D-->>A: Retorna saldo disponível
+
+    alt Quantidade inválida
+        A-->>W: Informa erro
+        W-->>U: Exibe mensagem de validação
+    else Prestação válida
+        A->>D: Registra prestação de contas
+
+        opt Pagamento em dinheiro
+            A->>D: Verifica existência de caixa aberto
+
+            alt Caixa fechado
+                A-->>W: Bloqueia operação
+                W-->>U: Informa necessidade de abrir caixa
+            else Caixa aberto
+                A->>D: Registra movimentação no caixa
+                A-->>W: Confirma operação
+                W-->>U: Exibe sucesso
+            end
+        end
+    end
+```
 
 ## Uso de GenAI e ajustes realizados
 
@@ -83,4 +134,6 @@ A abordagem **diagrams as code** permite manter os diagramas versionados junto a
 
 Quanto mais explícitos estiverem os limites, responsabilidades, regras de negócio e decisões arquiteturais, menor será a necessidade de o agente inventar decisões durante a implementação.
 
+## Repositório
 
+Link público: **[INSERIR LINK DO REPOSITÓRIO GITHUB]**
